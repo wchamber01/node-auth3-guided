@@ -1,7 +1,14 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const Users = require('../users/users-model.js');
+
+function makeToken(user) {
+  // make a "payload" object
+  // make an "options" object (exp)
+  // use the lib to make the token
+}
 
 // for endpoints beginning with /api/auth
 router.post('/register', (req, res) => {
@@ -25,6 +32,7 @@ router.post('/login', (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
+        const token = makeToken(user)
         res.status(200).json({
           message: `Welcome ${user.username}!`,
         });

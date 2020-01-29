@@ -6,8 +6,21 @@ const Users = require('../users/users-model.js');
 
 function makeToken(user) {
   // make a "payload" object
+  const payload = {
+    sub: user.id,
+    username: user.username,
+  };
   // make an "options" object (exp)
+  const options = {
+    expiresIn: '1d',
+  };
   // use the lib to make the token
+  const token = jwt.sign(
+    payload,
+    process.env.JWT_SECRET || 'thesecret',
+    options,
+  );
+  return token;
 }
 
 // for endpoints beginning with /api/auth
@@ -35,6 +48,7 @@ router.post('/login', (req, res) => {
         const token = makeToken(user)
         res.status(200).json({
           message: `Welcome ${user.username}!`,
+          token,
         });
       } else {
         res.status(401).json({ message: 'Invalid Credentials' });
